@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="3択クイズ：押したら即、正解表示">
+  <meta name="twitter:description" content="タップして選ぶとその場で正解が出ます。">
+  <meta name="twitter:image" content="{{ card_image_url }}">
+
+  <!-- Open Graph（保険）-->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="3択クイズ：押したら即、正解表示">
+  <meta property="og:description" content="タップして選ぶとその場で正解が出ます。">
+  <meta property="og:image" content="{{ card_image_url }}">
+  <meta property="og:url" content="{{ page_url }}">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3択クイズ</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+         max-width:680px;margin:24px auto;padding:0 16px;line-height:1.6}
+    h1{font-size:1.4rem}
+    form{display:grid;gap:8px;margin:16px 0}
+    button{padding:12px;border:1px solid #ddd;border-radius:10px;cursor:pointer}
+    .correct{color:#0a7a0a;font-weight:700}
+    .wrong{color:#b00020;font-weight:700}
+    .explain{background:#fafafa;border:1px solid #eee;border-radius:10px;padding:12px}
+  </style>
+</head>
+<body>
+  {% set letters = ['A','B','C','D'] %}
+  <h1>{{ quiz.q }}</h1>
+  <form method="post">
+    {% for choice in quiz.choices %}
+      <button name="a" value="{{ loop.index0 }}">{{ letters[loop.index0] }}. {{ choice }}</button>
+    {% endfor %}
+  </form>
+
+  {% if answered %}
+    {% if is_correct %}
+      <p class="correct">✅ 正解！</p>
+    {% else %}
+      <p class="wrong">❌ 残念！正解は {{ letters[quiz.answer] }}：{{ quiz.choices[quiz.answer] }}</p>
+    {% endif %}
+    <div class="explain">
+      <strong>解説：</strong> {{ quiz.explain }}
+    </div>
+  {% endif %}
+</body>
+</html>
