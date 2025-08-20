@@ -7,54 +7,124 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="3択クイズ：押したら即、正解表示">
   <meta name="twitter:description" content="タップして選ぶとその場で正解が出ます。">
-  <meta name="twitter:image" content="{{ card_image_url }}?v=5">
+  <meta name="twitter:image" content="{{ card_image_url }}?v=6">
 
-  <!-- Open Graph（保険）-->
+  <!-- Open Graph（保険） -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="3択クイズ：押したら即、正解表示">
   <meta property="og:description" content="タップして選ぶとその場で正解が出ます。">
-  <meta property="og:image" content="{{ card_image_url }}?v=5">
+  <meta property="og:image" content="{{ card_image_url }}?v=6">
   <meta property="og:url" content="{{ page_url }}">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- フォント -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
   <title>3択クイズ</title>
+
   <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-         max-width:680px;margin:24px auto;padding:0 16px;line-height:1.6}
-    h1{font-size:1.4rem}
-    form{display:grid;gap:8px;margin:16px 0}
-    button{padding:12px;border:1px solid #ddd;border-radius:10px;cursor:pointer}
-    .correct{color:#0a7a0a;font-weight:700}
-    .wrong{color:#b00020;font-weight:700}
-    .explain{background:#fafafa;border:1px solid #eee;border-radius:10px;padding:12px}
+    :root{
+      --bg:#f6f8fb; --card:#ffffff; --text:#1f2937;
+      --muted:#6b7280; --primary:#2563eb; --primary-2:#1e40af;
+      --ok:#16a34a; --ng:#dc2626; --border:#e5e7eb;
+      --shadow:0 10px 25px rgba(0,0,0,.07);
+    }
+    @media (prefers-color-scheme: dark){
+      :root{ --bg:#0b1220; --card:#0f1629; --text:#e5e7eb; --muted:#9ca3af; --border:#1f2937; --shadow:0 10px 30px rgba(0,0,0,.4); }
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #dbeafe55, transparent 60%),
+        radial-gradient(1200px 600px at 110% 10%, #fde68a33, transparent 60%),
+        var(--bg);
+      display:flex; align-items:flex-start; justify-content:center;
+    }
+    .wrap{width:100%; max-width:760px; padding:32px 16px}
+    .card{
+      background:var(--card); border:1px solid var(--border); border-radius:20px;
+      box-shadow:var(--shadow); padding:28px 24px;
+      animation:fadeIn .6s ease-out;
+    }
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+    h1{font-size:1.5rem; line-height:1.4; margin:4px 0 14px; letter-spacing:.2px}
+    .meta{color:var(--muted); font-size:.92rem; margin-bottom:14px}
+
+    form{display:grid; gap:12px; margin:18px 0 6px}
+    .choice{
+      appearance:none; border:1px solid var(--border); background:#f8fafc;
+      border-radius:12px; padding:14px 16px; text-align:left;
+      font-size:1rem; cursor:pointer; transition:.18s ease;
+      width:100%; position:relative; overflow:hidden;
+    }
+    .choice::after{
+      content:""; position:absolute; inset:0; background:linear-gradient(120deg,#93c5fd44,#c7d2fe44);
+      opacity:0; transition:.3s;
+    }
+    .choice:hover::after{opacity:1}
+    .choice:hover{ transform:translateY(-2px); box-shadow:0 6px 14px rgba(0,0,0,.08); }
+    .choice:active{ transform:translateY(0); box-shadow:none }
+    .choice:focus-visible{ outline:3px solid #93c5fd; outline-offset:2px }
+
+    .correct{ color:var(--ok); font-weight:700; margin-top:14px; animation:pop .3s ease-out }
+    .wrong{ color:var(--ng); font-weight:700; margin-top:14px; animation:pop .3s ease-out }
+    @keyframes pop{0%{transform:scale(.9)}100%{transform:scale(1)}}
+
+    .explain{
+      margin-top:12px; padding:14px 14px; border:1px dashed var(--border);
+      border-radius:14px; background:linear-gradient(180deg,#f8fafc,transparent);
+    }
+    .video a{
+      display:inline-flex; gap:8px; align-items:center; font-weight:600;
+      color:var(--primary); text-decoration:none; margin-top:8px;
+    }
+    .video a:hover{ color:var(--primary-2); transform:translateX(2px) }
+    footer{ color:var(--muted); font-size:.85rem; margin-top:20px; text-align:center }
   </style>
 </head>
 <body>
-  {% set letters = ['A','B','C','D'] %}
-  <h1>{{ quiz.q }}</h1>
-  <form method="post">
-    {% for choice in quiz.choices %}
-      <button name="a" value="{{ loop.index0 }}">{{ letters[loop.index0] }}. {{ choice }}</button>
-    {% endfor %}
-  </form>
+  <div class="wrap">
+    <div class="card">
+      <div class="meta">3択クイズ</div>
 
-  {% if answered %}
-    {% if is_correct %}
-      <p class="correct">✅ 正解！</p>
-    {% else %}
-      <p class="wrong">❌ 残念！正解は {{ letters[quiz.answer] }}：{{ quiz.choices[quiz.answer] }}</p>
-    {% endif %}
+      {% set letters = ['A','B','C','D'] %}
+      <h1>{{ quiz.q }}</h1>
 
-    <div class="explain">
-      <strong>解説：</strong> {{ quiz.explain }}
-      {% if quiz.video_url %}
-        <div style="margin-top:8px;">
-          <a href="{{ quiz.video_url }}" target="_blank" rel="noopener noreferrer">
-            {{ quiz.video_title or '▶ 動画を見る' }}
-          </a>
+      <form method="post">
+        {% for choice in quiz.choices %}
+          <button class="choice" name="a" value="{{ loop.index0 }}">
+            {{ letters[loop.index0] }}. {{ choice }}
+          </button>
+        {% endfor %}
+      </form>
+
+      {% if answered %}
+        {% if is_correct %}
+          <p class="correct">✅ 正解！</p>
+        {% else %}
+          <p class="wrong">❌ 残念！正解は {{ letters[quiz.answer] }}：{{ quiz.choices[quiz.answer] }}</p>
+        {% endif %}
+
+        <div class="explain">
+          <strong>解説：</strong> {{ quiz.explain }}
+          {% if quiz.video_url %}
+            <div class="video">
+              <a href="{{ quiz.video_url }}" target="_blank" rel="noopener noreferrer">
+                ▶ {{ quiz.video_title or '動画を見る' }}
+              </a>
+            </div>
+          {% endif %}
         </div>
       {% endif %}
+
+      <footer>タップで回答、即判定・解説表示</footer>
     </div>
-  {% endif %}
+  </div>
 </body>
 </html>
