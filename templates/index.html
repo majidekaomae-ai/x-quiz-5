@@ -46,6 +46,11 @@
     {% endif %}
     <div class="explain">
       <strong>解説：</strong> {{ quiz.explain }}
+      {% if quiz.video_url %}
+    <div style="margin-top:8px;">
+      <a href="{{ quiz.video_url }}" target="_blank" rel="noopener noreferrer">
+        {{ quiz.video_title or '▶ 動画を見る' }}
+      </a>
     </div>
   {% endif %}
 </body>
