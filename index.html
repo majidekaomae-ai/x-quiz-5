@@ -61,13 +61,13 @@
       <div class="meta">3択クイズ</div>
 
       <!-- ▼ 問題文（自由に変更） -->
-      <h1 id="q">便潜血検査：1000人受けたら何人くらい陽性？</h1>
+      <h1 id="q">両親や兄弟に大腸がんの人がいると、自分のリスクは？</h1>
 
       <!-- ▼ 選択肢（?a=0/1/2 で即判定） -->
       <div class="choices">
-        <a class="choice" href="?a=0">A. 10人前後</a>
-        <a class="choice" href="?a=1">B. 100人前後</a>
-        <a class="choice" href="?a=2">C. 300人前後</a>
+        <a class="choice" href="?a=0">A. 変わらない</a>
+        <a class="choice" href="?a=1">B. 約1.2倍</a>
+        <a class="choice" href="?a=2">C. 約2倍</a>
       </div>
 
       <!-- ▼ 判定＆解説が出る場所 -->
@@ -80,9 +80,9 @@
   <script>
     // ▼ 正解と解説（ここだけ変えれば別問題にも使い回せます）
     const quiz = {
-      answer: 1, // A=0, B=1, C=2…
-      explain: "便潜血検査では1000人中およそ100人が陽性となり、そのうち約2〜3人に大腸がんが見つかります。定期的な検診が早期発見に繋がります。",
-      video: { title: "名医が解説する「大腸がん」の動画はコチラから！", url: "https://youtu.be/mVy6wHglH_8" } // 不要なら url を空欄に
+      answer: 2, // A=0, B=1, C=2…
+      explain: "血縁者に大腸がんがあると、自分のリスクは約2倍。遺伝や生活習慣の共通が影響していると考えられています。定期的な検診で早期発見・予防が可能です。",
+      video: { title: "名医が解説する「大腸がん」第4話。視聴はコチラから！", url: "https://youtu.be/mVy6wHglH_8" } // 不要なら url を空欄に
     };
 
     // ▼ URLの ?a= に応じて即判定
