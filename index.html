@@ -4,85 +4,149 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Twitter Card / OG（絶対URLに修正済み） -->
+  <!-- Twitter Card / OGP -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="3択クイズ：押したら即、正解表示">
   <meta name="twitter:description" content="タップして選ぶとその場で正解が出ます。">
-  <meta name="twitter:image" content="https://x-quiz-2.onrender.com/card_v2.jpg?v=2">
+  <meta name="twitter:image" content="https://x-quiz-3.onrender.com/card_v2.jpg?v=2">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="3択クイズ：押したら即、正解表示">
   <meta property="og:description" content="タップして選ぶとその場で正解が出ます。">
-  <meta property="og:image" content="https://x-quiz-2.onrender.com/card_v2.jpg?v=2">
-  <meta property="og:url" content="https://x-quiz-2.onrender.com/">
-  <link rel="canonical" href="https://x-quiz-2.onrender.com/">
+  <meta property="og:image" content="https://x-quiz-3.onrender.com/card_v2.jpg?v=2">
+  <meta property="og:url" content="https://x-quiz-3.onrender.com/">
+  <link rel="canonical" href="https://x-quiz-3.onrender.com/">
 
   <title>3択クイズ</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
-    :root{ --bg:#f6f8fb; --card:#ffffff; --text:#1f2937; --muted:#6b7280; --primary:#2563eb; --primary-2:#1e40af; --ok:#16a34a; --ng:#dc2626; --border:#e5e7eb; --shadow:0 10px 25px rgba(0,0,0,.07); }
-    @media (prefers-color-scheme: dark){
-      :root{ --bg:#0b1220; --card:#0f1629; --text:#e5e7eb; --muted:#9ca3af; --border:#1f2937; --shadow:0 10px 30px rgba(0,0,0,.4); }
+    /* ===== ポップな配色（サムネのトーンに合わせる） ===== */
+    :root{
+      --bg:#FFF6D9;                /* クリーム */
+      --bg-dot:rgba(246,182,0,.18);/* 背景ドット */
+      --card:#ffffff;              /* カード白 */
+      --text:#3C2A1E;              /* こげ茶 */
+      --muted:#7A6F68;
+      --brand:#FF8A00;             /* オレンジ帯 */
+      --brand-dark:#E67800;
+      --sky:#55B7FF;               /* 選択肢カラー */
+      --sky-dark:#2F9AE6;
+      --ok:#16a34a;
+      --ng:#dc2626;
+      --border:#f1e8d0;
+      --shadow:0 10px 22px rgba(255,138,0,.10), 0 4px 10px rgba(0,0,0,.06);
+      --radius:20px;
+      --maxw:760px;
     }
-    *{box-sizing:border-box} html,body{height:100%}
+    *{box-sizing:border-box}
+    html,body{height:100%}
     body{
-      margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; color:var(--text);
-      background: radial-gradient(1200px 600px at 10% -10%, #dbeafe55, transparent 60%),
-                 radial-gradient(1200px 600px at 110% 10%, #fde68a33, transparent 60%),
-                 var(--bg);
+      margin:0; color:var(--text);
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo;
+      line-height:1.75;
+      /* クリーム＋水玉の背景 */
+      background:
+        radial-gradient(circle 4px at 12px 12px, var(--bg-dot) 35%, transparent 36%) 0 0/24px 24px,
+        var(--bg);
       display:flex; align-items:flex-start; justify-content:center;
     }
-    .wrap{width:100%; max-width:760px; padding:32px 16px}
-    .card{ background:var(--card); border:1px solid var(--border); border-radius:20px; box-shadow:var(--shadow); padding:28px 24px; animation:fadeIn .6s ease-out }
-    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-    h1{font-size:1.5rem; line-height:1.4; margin:4px 0 14px; letter-spacing:.2px}
-    .meta{color:var(--muted); font-size:.92rem; margin-bottom:14px}
-    .choices{display:grid; gap:12px; margin:18px 0 6px}
-    .choice{
-      display:block; border:1px solid var(--border); background:#f8fafc; border-radius:12px; padding:14px 16px; text-decoration:none; color:inherit; font-size:1rem; position:relative; overflow:hidden; transition:.18s ease;
+    .wrap{width:100%; max-width:var(--maxw); padding:28px 16px}
+    .card{
+      background:var(--card); border:1px solid var(--border);
+      border-radius:var(--radius); box-shadow:var(--shadow);
+      overflow:hidden; animation:fadeIn .5s ease-out;
     }
-    .choice::after{content:""; position:absolute; inset:0; background:linear-gradient(120deg,#93c5fd44,#c7d2fe44); opacity:0; transition:.3s}
-    .choice:hover::after{opacity:1} .choice:hover{ transform:translateY(-2px); box-shadow:0 6px 14px rgba(0,0,0,.08) }
-    .choice:active{ transform:translateY(0); box-shadow:none }
-    .choice:focus-visible{ outline:3px solid #93c5fd; outline-offset:2px }
-    .correct{ color:var(--ok); font-weight:700; margin-top:14px; animation:pop .3s ease-out }
-    .wrong{ color:var(--ng); font-weight:700; margin-top:14px; animation:pop .3s ease-out }
+    @keyframes fadeIn{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:translateY(0)}}
+
+    /* 上部のオレンジ帯（タイトル） */
+    .bar{
+      display:flex; align-items:center; gap:10px;
+      padding:12px 16px;
+      background:linear-gradient(90deg, var(--brand), #FFA93A);
+      color:#fff; font-weight:800; letter-spacing:.04em;
+    }
+    .bar .q{
+      width:26px; height:26px; border-radius:50%;
+      background:#fff; color:var(--brand); display:grid; place-items:center; font-weight:900;
+      box-shadow:0 2px 6px rgba(0,0,0,.08);
+    }
+
+    .body{padding:20px 18px 8px}
+    h1{font-size:1.45rem; line-height:1.45; margin:6px 0 10px; letter-spacing:.2px}
+    .meta{color:var(--muted); font-size:.9rem; margin-bottom:8px}
+
+    /* 選択肢 */
+    .choices{display:grid; gap:12px; margin:16px 0 10px}
+    .choice{
+      display:block; position:relative;
+      border:1px solid var(--border);
+      background:linear-gradient(180deg,#F7FBFF, #ECF6FF);
+      border-radius:16px; padding:14px 16px 14px 54px;
+      color:#083b53; text-decoration:none; font-size:1.05rem; font-weight:600;
+      transition:transform .15s ease, box-shadow .15s ease;
+      box-shadow:0 4px 14px rgba(85,183,255,.15);
+    }
+    .choice::before{
+      content:attr(data-badge);
+      position:absolute; left:14px; top:50%; transform:translateY(-50%);
+      width:30px; height:30px; border-radius:10px;
+      background:linear-gradient(180deg,var(--sky), #8fd0ff);
+      color:#fff; display:grid; place-items:center; font-weight:800;
+      box-shadow:0 3px 10px rgba(85,183,255,.35);
+    }
+    .choice:hover{ transform:translateY(-2px); box-shadow:0 8px 20px rgba(85,183,255,.25) }
+    .choice:active{ transform:translateY(0) }
+    .choice:focus-visible{ outline:3px solid var(--sky); outline-offset:2px }
+
+    .correct{ color:var(--ok); font-weight:800; margin-top:14px; animation:pop .25s ease-out }
+    .wrong{ color:var(--ng); font-weight:800; margin-top:14px; animation:pop .25s ease-out }
     @keyframes pop{0%{transform:scale(.9)}100%{transform:scale(1)}}
-    .explain{ margin-top:12px; padding:14px 14px; border:1px dashed var(--border); border-radius:14px; background:linear-gradient(180deg,#f8fafc,transparent) }
-    .video a{ display:inline-flex; gap:8px; align-items:center; font-weight:600; color:var(--primary); text-decoration:none; margin-top:8px }
-    .video a:hover{ color:var(--primary-2); transform:translateX(2px) }
-    footer{ color:var(--muted); font-size:.85rem; margin-top:20px; text-align:center }
+
+    .explain{
+      margin-top:12px; padding:14px; border:2px dashed var(--border);
+      border-radius:16px; background:#fffdf6;
+    }
+    .video a{
+      display:inline-flex; gap:8px; align-items:center; font-weight:700;
+      color:var(--brand); text-decoration:none; margin-top:8px;
+    }
+    .video a:hover{ color:var(--brand-dark); transform:translateX(2px) }
+
+    footer{ color:var(--muted); font-size:.85rem; margin:16px 0 18px; text-align:center }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="card">
-      <div class="meta">3択クイズ</div>
+      <div class="bar"><span class="q">Q</span>健康情報クイズ｜カラコロ・ラボ</div>
+      <div class="body">
+        <div class="meta">3択クイズ</div>
 
-      <!-- ▼ 問題文（自由に変更） -->
-      <h1 id="q">2025年現在、白内障の手術数は年間どのくらい？</h1>
+        <!-- ▼ 問題文 -->
+        <h1 id="q">2025年現在、白内障の手術数はどれくらい？</h1>
 
-      <!-- ▼ 選択肢（?a=0/1/2 で即判定） -->
-      <div class="choices">
-        <a class="choice" href="?a=0">A. 約10万件</a>
-        <a class="choice" href="?a=1">B. 約80万件</a>
-        <a class="choice" href="?a=2">C. 約200万件</a>
+        <!-- ▼ 選択肢（?a=0/1/2 で即判定） -->
+        <div class="choices">
+          <a class="choice" href="?a=0" data-badge="A">約10万件</a>
+          <a class="choice" href="?a=1" data-badge="B">約80万件</a>
+          <a class="choice" href="?a=2" data-badge="C">約200万件</a>
+        </div>
+
+        <!-- ▼ 判定＆解説 -->
+        <div id="result"></div>
+
+        <footer>タップで回答、即判定・解説表示</footer>
       </div>
-
-      <!-- ▼ 判定＆解説が出る場所 -->
-      <div id="result"></div>
-
-      <footer>タップで回答、即判定・解説表示</footer>
     </div>
   </div>
 
   <script>
-    // ▼ 正解と解説（ここだけ変えれば別問題にも使い回せます）
+    // ▼ 正解と解説（ここだけ変えれば別問題にも使い回し可）
     const quiz = {
       answer: 2, // A=0, B=1, C=2…
       explain: "厚生労働省の統計では、2019年時点で約166万件。現在は200万件近くとみられる。手術で使用する麻酔も点眼薬が中心で、手術時間も数十分ほど。「視力が落ちたかな？」と感じたら、早めに専門医へご相談ください。",
-      video: { title: "名医が解説する「目の健康」第1話。視聴はコチラから！", url: "https://youtu.be/HaiL0rlfsUI?si=4S0xgXX-2pQSyvtC" } // 不要なら url を空欄に
+      video: { title: "名医が解説する「目の健康」第1話。視聴はコチラから！", url: "https://youtu.be/HaiL0rlfsUI?si=rdrq3npGNMlzC6ns" }
     };
 
     // ▼ URLの ?a= に応じて即判定
@@ -105,7 +169,7 @@
             </div>` : ''}
         </div>
       `;
-      setTimeout(()=>res.scrollIntoView({behavior:'smooth', block:'start'}), 150);
+      setTimeout(()=>res.scrollIntoView({behavior:'smooth', block:'start'}), 120);
     }
   </script>
 </body>
